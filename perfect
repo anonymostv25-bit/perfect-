@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadowvale Adventure</title>
+
+<style>
+    body {
+        background-color: #111;
+        color: #eee;
+        font-family: Consolas, monospace;
+        padding: 20px;
+    }
+    #game-box {
+        background: #222;
+        padding: 20px;
+        border-radius: 8px;
+        width: 600px;
+        max-width: 90%;
+        margin: auto;
+        box-shadow: 0 0 10px #000;
+    }
+    button {
+        display: block;
+        background: #444;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        margin: 8px 0;
+        width: 100%;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background: #666;
+    }
+    h1 {
+        text-align: center;
+        color: #7fd;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="game-box">
+    <h1>Shadowvale Adventure</h1>
+    <p id="text"></p>
+    <div id="choices"></div>
+</div>
+
+<script>
+function set(text, choices = []) {
+    document.getElementById("text").innerHTML = text;
+    const c = document.getElementById("choices");
+    c.innerHTML = "";
+
+    choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.innerText = choice.text;
+        btn.onclick = choice.action;
+        c.appendChild(btn);
+    });
+}
+
+function intro() {
+    set(`
+        <b>WELCOME TO THE REALM OF SHADOWVALE</b><br><br>
+        You awaken in a dimly lit forest. A cold wind whistles through the trees.<br><br>
+        A narrow path leads <b>NORTH</b>. A faint glow pulses to the <b>EAST</b>.<br><br>
+        What will you do?
+    `, [
+        { text: "Go NORTH", action: forestPath },
+        { text: "Go EAST", action: glowingLight }
+    ]);
+}
+
+function forestPath() {
+    set(`
+        You walk north along the rough forest path.<br><br>
+        The trees thin out, revealing an abandoned watchtower.
+    `, [
+        { text: "Enter the watchtower", action: watchtower },
+        { text: "Return to the clearing", action: intro }
+    ]);
+}
+
+function glowingLight() {
+    set(`
+        You move toward the pale glow.<br><br>
+        A floating crystal hovers above an ancient rune circle.
+    `, [
+        { text: "Touch the crystal", action: crystalEvent },
+        { text: "Walk away", action: intro }
+    ]);
+}
+
+function watchtower() {
+    set(`
+        Inside the watchtower, you find dusty stairs leading up.<br><br>
+        At the top, a raven with glowing red eyes speaks:<br>
+        "<i>Turn back… or embrace your fate.</i>"
+    `, [
+        { text: "Talk to the raven", action: () => ending("THE ORACLE OF FEATHERS ENDING") },
+        { text: "Attack the raven", action: () => ending("THE CURSED WATCHER ENDING") },
+        { text: "Run away", action: intro }
+    ]);
+}
+
+function crystalEvent() {
+    set(`
+        The moment your hand touches the crystal, visions flood your mind.<br><br>
+        You see kingdoms rising and falling… and yourself at the center of it all.<br><br>
+        Do you accept the visions?
+    `, [
+        { text: "Yes", action: () => ending("THE CHOSEN SEER ENDING") },
+        { text: "No", action: () => ending("THE FORGOTTEN DREAMER ENDING") }
+    ]);
+}
+
+function ending(title) {
+    set(`
+        <h2>${title}</h2>
+        Thank you for playing!
+    `, [
+        { text: "Play Again", action: intro }
+    ]);
+}
+
+// Start game
+intro();
+</script>
+
+</body>
+</html>
